@@ -7,6 +7,20 @@
 
 (hugsql/def-db-fns "hapi/sql/database.sql")
 
+(defn init-db []
+  (install-uuid-module db)
+  (create-endpoint-table db)
+  (create-upload-table db)
+  (create-row-table db)
+  (create-cell-table db))
+
+(defn reset-db! []
+  (init-db)
+  (delete-all-cells db)
+  (delete-all-rows db)
+  (delete-all-uploads db)
+  (delete-all-endpoints db))
+
 (defn create-endpoint [db]
   (:id (create-endpoint* db)))
 
@@ -16,4 +30,5 @@
    :body "Hello, World!"})
 
 (defn -main []
+  (init-db)
   (jetty/run-jetty app {:port 8080}))
