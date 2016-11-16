@@ -1,6 +1,6 @@
 # hapi
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library designed to generate a REST API from a CSV file.
 
 ## Usage
 
