@@ -27,6 +27,11 @@ CREATE TABLE IF NOT EXISTS uploads (
   uploaded_at TIMESTAMPTZ NOT NULL DEFAULT now()
 )
 
+-- :name create-upload* <:! :1
+INSERT INTO uploads (id, endpoint_id)
+VALUES (uuid_generate_v4(), :endpoint-id)
+RETURNING id;
+
 -- :name create-row-table
 -- :command :execute
 -- :result :raw
@@ -35,15 +40,25 @@ CREATE TABLE IF NOT EXISTS rows (
   upload_id UUID NOT NULL references uploads (id)
 )
 
+-- :name create-row* <:! :1
+INSERT INTO rows (id, upload_id)
+VALUES (uuid_generate_v4(), :upload-id)
+RETURNING id;
+
 -- :name create-cell-table
 -- :command :execute
 -- :result :raw
 CREATE TABLE IF NOT EXISTS cells (
   id         UUID PRIMARY KEY,
-  cell_id UUID NOT NULL references rows (id),
+  row_id UUID NOT NULL references rows (id),
   key TEXT NOT NULL,
   value TEXT NOT NULL
 )
+
+-- :name create-cell* <:! :1
+INSERT INTO cells (id, row_id, key, value)
+VALUES (uuid_generate_v4(), :row-id, :key, :value)
+RETURNING id;
 
 -- :name delete-all-endpoints :!
 DELETE FROM endpoints

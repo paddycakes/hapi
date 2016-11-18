@@ -24,6 +24,17 @@
 (defn create-endpoint [db]
   (:id (create-endpoint* db)))
 
+(defn create-upload [db endpoint-id]
+  (:id (create-upload* db {:endpoint-id endpoint-id})))
+
+(defn create-row [db upload-id]
+  (:id (create-row* db {:upload-id upload-id})))
+
+(defn create-cell [db row-id key value]
+  (:id (create-cell* db {:row-id row-id
+                         :key key
+                         :value value})))
+
 (defn app [req]
   {:headers {}
    :status 200
