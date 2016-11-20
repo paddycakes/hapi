@@ -60,6 +60,28 @@ INSERT INTO cells (id, row_id, key, value)
 VALUES (uuid_generate_v4(), :row-id, :key, :value)
 RETURNING id;
 
+
+-- :name how-many-rows
+SELECT count(*) from rows
+WHERE upload_id = :upload-id
+
+-- :name uploads-for-endpoint
+SELECT id from uploads
+WHERE endpoint_id = :endpoint-id
+
+-- :name keys-for-upload*
+SELECT DISTINCT key
+from cells
+  JOIN rows ON cells.row_id = rows.id
+WHERE rows.upload_id = :upload-id
+
+-- :name rows-for-upload*
+SELECT row_id, key, value
+FROM cells
+  JOIN rows ON cells.row_id = rows.id
+WHERE rows.upload_id = :upload-id
+
+
 -- :name delete-all-endpoints :!
 DELETE FROM endpoints
 
